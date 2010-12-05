@@ -38,11 +38,8 @@ HL1606::HL1606(unsigned int S, unsigned int D, unsigned int C, unsigned int L, u
   _C = C;
   _LEDCount = LEDCount;
   
-  //This is the required delay between sending a bit and the clock line being fired.
-  //You can tweak this value lower until you find LEDs on the end of your chain misbehaving
-  //In fact, if you are running less than a few hundred LEDs you can get away with zero here.
-  //250nSec per LED is the specified value for the chip.
-  _ClockWait = (LEDCount * 250)/1000;   
+  _ClockWait = 1;
+  // Should be (LEDCount * 250)/1000, but this seems to suffice for 200 LEDs.
 
   pinMode(_S, OUTPUT);
   pinMode(_D, OUTPUT);
@@ -87,7 +84,7 @@ void HL1606::latch()
 
 void HL1606::fade()
 {
-  unsigned int fadeDelay = 1000;
+  unsigned int fadeDelay = 250;
 
   digitalWrite(_S, HIGH);
   delayMicroseconds(fadeDelay);
@@ -108,4 +105,34 @@ void HL1606::fades(unsigned int y, unsigned int d)
   }
 }
 
+
+void HL1606::sendRing(unsigned char *buffer, int start, int len, int n) {
+  unsigned int i;
+  for(i=0; i < n; i++) {
+    while (start >= len) start -= len;
+    sendByte(buffer[start]);
+    start++;
+  }
+}
+
+void HL1606::setAll(unsigned char command) {
+  unsigned int a;
+  for(a = 0; a < _LEDCount; a++) {
+    sendByte(command);
+  }
+  latch();   
+}
+
+void HL1606::setOne(unsigned int led, unsigned char command, unsigned char background) {
+  unsigned int a;
+  for(a = led+1; a < _LEDCount; a++) sendByte(background);
+  sendByte(command);
+  for(a = 0; a < led; a++) sendByte(background);
+  latch();     
+}
+
+void HL1606::setRing(unsigned char *buffer, int start, int len) {
+  sendRing(buffer, start, len, _LEDCount);
+  latch();
+}
 

@@ -53,11 +53,32 @@
 class HL1606
 {
   public:
+    // Initialize with pin numbers and LED count.
     HL1606(unsigned int S, unsigned int D, unsigned int C, unsigned int L, unsigned int LEDCount);
+  
+    // Push a single command byte onto the strip.
     void sendByte(unsigned char it);
+    
+    // Latch current command values
     void latch();
+    
+    // Do one step of fade, as quickly as possible
     void fade();
+    
+    // Do y steps of fade, with d microseconds delay (>= 250) per edge.
     void fades(unsigned int y, unsigned int d);
+
+    // Send n commands by cycling through 'buffer', starting at 'start' 
+    void sendRing(unsigned char *buffer, int start, int len, int n);
+    
+    // Set all LEDs to a constant command
+    void setAll(unsigned char command);
+
+    // Set LED 'led' to 'command', and all others to 'background'
+    void setOne(unsigned int led, unsigned char command, unsigned char background);
+    
+    // Set all LEDs by cycling through 'buffer', starting at 'start'
+    void setRing(unsigned char *buffer, int start, int len);
          
   private:
     int _S, _D, _C, _L;
