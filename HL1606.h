@@ -41,14 +41,14 @@
 #define RedOn       B00000100
 #define RedUp       B00001000
 #define RedDown     B00001100
-#define GreenOff    B00000000
-#define GreenOn     B00000001
-#define GreenUp     B00000010
-#define GreenDown   B00000011
-#define BlueOff     B00000000   
-#define BlueOn      B00010000
-#define BlueUp      B00100000
-#define BlueDown    B00110000
+#define GreenOff    B00000000   
+#define GreenOn     B00010000
+#define GreenUp     B00100000
+#define GreenDown   B00110000
+#define BlueOff     B00000000
+#define BlueOn      B00000001
+#define BlueUp      B00000010
+#define BlueDown    B00000011
 
 class HL1606
 {
