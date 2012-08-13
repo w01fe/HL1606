@@ -79,6 +79,9 @@ class HL1606
     
     // Set all LEDs by cycling through 'buffer', starting at 'start'
     void setRing(unsigned char *buffer, int start, int len);
+
+    // Set all LEDs by cycling through 'buffer', starting at 'start'
+    void setFadedRing(unsigned char *buffer, unsigned char *nFades, int start, int len);
          
   private:
     int _S, _D, _C, _L;

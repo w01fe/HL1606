@@ -136,3 +136,27 @@ void HL1606::setRing(unsigned char *buffer, int start, int len) {
   latch();
 }
 
+// Set all LEDs by cycling through 'buffer', starting at 'start'
+void HL1606::setFadedRing(unsigned char *buffer, unsigned char *nFades, int start, int len) {
+  int maxF = 0;
+  for(unsigned int i=0; i < len; i++) if (nFades[i] > maxF) maxF = nFades[i]; 
+  setAll(Command);
+  while(maxF >= 0) {
+     fades(1,250);
+     boolean found = false;
+     for(unsigned int i=0; i < len; i++) {
+       if (nFades[i] == maxF) found = true;
+     }
+       
+     if(found) {
+       for(unsigned int i=0; i < _LEDCount; i++) {
+         unsigned int ind = (start + i) % len;
+         sendByte(nFades[ind] == maxF ? buffer[ind] : Noop);
+       }
+       latch();
+     } 
+     maxF--;
+  }  
+}
+
+
