@@ -31,7 +31,7 @@
 #ifndef HL1606_H
 #define HL1606_H
 
-#include "WProgram.h"
+#include "Arduino.h"
 
 //Commands for each LED to be ORd together.
 #define Noop        B00000000

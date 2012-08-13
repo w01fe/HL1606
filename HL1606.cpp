@@ -27,7 +27,6 @@
  * Based on code provided by Microcontrollersandmore.com
  */
 
-#include "WProgram.h"
 #include "HL1606.h"
 
 HL1606::HL1606(unsigned int S, unsigned int D, unsigned int C, unsigned int L, unsigned int LEDCount)
