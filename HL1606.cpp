@@ -56,22 +56,24 @@ void HL1606::sendByte(unsigned char it)
 {
   //Send out one byte, don't forget to LATCH it by calling
   //Note that for LARGE number of LEDs you may need to slow things down a little here.  
-  digitalWrite(_C, LOW);
-
-  char x;
-     for(x=0;x < 8; x++)
-    { 
-    if(B10000000 & it)
-      digitalWrite(_D, HIGH); 
-    else
-      digitalWrite(_D, LOW); 
-    it = it<<1;
-    // Wait here needs to be 250 x Number of LEDs nano seconds to allow data to propagate before being clocked in
-    delayMicroseconds(_ClockWait);
-    digitalWrite(_C, HIGH);
-    digitalWrite(_C, LOW);
-
-    }
+  shiftOut(_D, _C, MSBFIRST, it);
+  
+  // digitalWrite(_C, LOW);
+  // 
+  // char x;
+  //    for(x=0;x < 8; x++)
+  //   { 
+  //   if(B10000000 & it)
+  //     digitalWrite(_D, HIGH); 
+  //   else
+  //     digitalWrite(_D, LOW); 
+  //   it = it<<1;
+  //   // Wait here needs to be 250 x Number of LEDs nano seconds to allow data to propagate before being clocked in
+  //   delayMicroseconds(_ClockWait);
+  //   digitalWrite(_C, HIGH);
+  //   digitalWrite(_C, LOW);
+  // 
+  //   }
 }
 
 void HL1606::latch()
@@ -114,6 +116,17 @@ void HL1606::sendRing(unsigned char *buffer, int start, int len, int n) {
   }
 }
 
+void HL1606::sendBackwardRing(unsigned char *buffer, int start, int len, int n) {
+  unsigned int i;
+  start = (start + n - 1) % len;
+  for(i=0; i < n; i++) {
+    while (start < 0) start += len;
+    sendByte(buffer[start]);
+    start--;
+  }
+}
+
+
 void HL1606::setAll(unsigned char command) {
   unsigned int a;
   for(a = 0; a < _LEDCount; a++) {
@@ -134,6 +147,12 @@ void HL1606::setRing(unsigned char *buffer, int start, int len) {
   sendRing(buffer, start, len, _LEDCount);
   latch();
 }
+
+void HL1606::setBackwardRing(unsigned char *buffer, int start, int len) {
+  sendBackwardRing(buffer, start, len, _LEDCount);
+  latch();
+}
+
 
 // Set all LEDs by cycling through 'buffer', starting at 'start'
 void HL1606::setFadedRing(unsigned char *buffer, unsigned char *nFades, int start, int len) {

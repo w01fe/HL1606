@@ -70,6 +70,7 @@ class HL1606
 
     // Send n commands by cycling through 'buffer', starting at 'start' 
     void sendRing(unsigned char *buffer, int start, int len, int n);
+    void sendBackwardRing(unsigned char *buffer, int start, int len, int n);
     
     // Set all LEDs to a constant command
     void setAll(unsigned char command);
@@ -79,11 +80,11 @@ class HL1606
     
     // Set all LEDs by cycling through 'buffer', starting at 'start'
     void setRing(unsigned char *buffer, int start, int len);
+    void setBackwardRing(unsigned char *buffer, int start, int len);
 
     // Set all LEDs by cycling through 'buffer', starting at 'start'
     void setFadedRing(unsigned char *buffer, unsigned char *nFades, int start, int len);
          
-  private:
     int _S, _D, _C, _L;
     unsigned int _LEDCount, _ClockWait;
 };
